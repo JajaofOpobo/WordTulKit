@@ -106,3 +106,73 @@ Provide or designate a Windows host with desktop Word + Visual Studio, then run
 Prompt A (plan §11) followed by the six-test spike, and update
 `docs/decisions/ADR-0001-platform.md` from Proposed to Accepted/Rejected with
 measured evidence. Do not start Phase 1 until that gate passes.
+
+---
+
+## 2026-10-11 — Decompilation authorised; identification probes run (prep for Windows move)
+
+TASK / PHASE: Phase 0 — commence authorised Kutools inspection prep.
+ROLE AND MODEL: Coordinator (Muse Spark 1.3).
+FILES READ: `docs/AGENTS.md` §4, plan §§2/12, prior handoff content above.
+FILES CHANGED:
+- `docs/research/kutools-investigation/AUTHORISATION.md` (new — permission record + provenance)
+- `docs/research/kutools-investigation/README.md` (new — handling rules)
+- `docs/research/kutools-investigation/WINDOWS_RUNBOOK.md` (new — deep-inspection procedure)
+- `docs/research/kutools-investigation/FEATURE_SPEC_TEMPLATE.md` (new)
+- `.gitignore` (quarantine guard rules appended)
+DECISIONS MADE: Owner's "commence decompilation" instruction recorded as the
+§4 permission establishment; prohibitions on copying/porting/feeding
+implementers explicitly retained; raw materials confined to out-of-repo
+quarantine (`../WordTulKit-investigation/`); deep work assigned to Windows host.
+COMMANDS RUN: `ls`, `file`, `sha256sum`, `7z l` (headers only), bounded
+`strings` publisher-marker scan across the three `~/Downloads/wordkutools*.exe`
+installers. Nothing executed, extracted, or modified.
+BUILD / TEST RESULTS: No build/tests. Provenance: `wordkutools.exe` = Inno/
+ExtendOffice (ver. unverified, 20 MiB, `abfc57bc…`); `wordkutools latest v17.exe`
+= non-Inno, ©2025 ExtendOffice, believed v17 (48 MiB, `7218d643…`);
+`wordkutools v8.2.exe` = Inno (17 MiB, `6a926ea0…`). No decompiler run.
+TESTS NOT RUN AND WHY: Extraction/disassembly BLOCKED pending owner answers
+(primary binary, licence/EULA check, Windows host) — see open questions.
+KNOWN LIMITATIONS / RISKS: Legal assessment is the owner's (checklist in
+AUTHORISATION.md); exact binary versions unverified; v17 packer unidentified;
+`innoextract`/decompiler toolchain not installed.
+DEPENDENCIES ADDED OR PROPOSED: None (toolchain pinned later on Windows host).
+NEXT RECOMMENDED ACTION: Owner answers the four gating questions; then extract
++ inspect the primary binary on the Windows host per WINDOWS_RUNBOOK.md.
+
+---
+
+## 2026-10-11 (later) — Owner answers received; Linux static survey complete
+
+TASK / PHASE: Phase 0 — authorised inspection, Linux-maximum static pass.
+ROLE AND MODEL: Coordinator (Muse Spark 1.3).
+OWNER ANSWERS: (1) Primary scope: **multiple builds** + version deltas.
+(2) Licence/EULA: **licensed and checked** (owner's legal assessment, recorded
+in AUTHORISATION.md). (3) Windows host: **not yet** — maximum Linux static
+work ordered. (4) Features: **all four** (numbering, footnote recovery,
+formatting profiles, cleanup).
+FILES READ: `~/Downloads/wordkutools*.exe` (read-only probes only).
+FILES CHANGED:
+- `docs/research/kutools-investigation/STATIC_SURVEY_2026-10-11.md` (new — facts)
+- `.../numbering|footnote-recovery|formatting-profiles|cleanup-tools/FEATURE_SPEC.md` (new — draft capture plans)
+- `AUTHORISATION.md`, `README.md` (owner answers, resolved versions, methods)
+COMMANDS RUN: read-only PE/overlay parser (sections, data dirs, overlay
+offsets, marker counts), UTF-16 version-resource read, embedded-signature
+scan (7z/MSI/CAB), `.NET`-marker counts. Nothing executed/extracted/copied.
+BUILD / TEST RESULTS: Versions resolved — A=`wordkutools.exe`**8.7.0.1** Inno;
+B=`v17` file **16.20.00** Advanced Installer 16.5 (filename≠version);
+C=`v8.2.exe`**8.2.119.0** Inno. All Authenticode-signed. B embeds 7z @0x27e0a8
+(`KutoolsPerUser.7z`); A/C payloads opaque (Inno compression). No CLR markers
+visible in any stub/payload scan. Full hashes in survey table.
+TESTS NOT RUN AND WHY: Payload extraction + disassembly + black-box capture
+BLOCKED — no Windows host (no Wine here; running installers impossible).
+Linux static work is now exhausted without extraction tooling.
+KNOWN LIMITATIONS / RISKS: Payload contents, managed-vs-native composition,
+and feature inventory unknown; MZ-count figures are byte-pair noise in
+compressed data (reported as counts only); download chain-of-custody unknown;
+`innoextract`/decompiler toolchain deferred to Windows host.
+DEPENDENCIES ADDED OR PROPOSED: None.
+NEXT RECOMMENDED ACTION: On the Windows host — verify hashes, `7z l` B's
+embedded archive, `innoextract` A/C to quarantine, then black-box capture per
+the four draft specs (WINDOWS_RUNBOOK.md steps 1–6). Leave this change
+uncommitted until the owner reviews.

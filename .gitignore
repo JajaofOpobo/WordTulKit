@@ -41,3 +41,10 @@ Thumbs.db
 appsettings.*.json
 .env
 .env.*
+
+# Kutools investigation quarantine (never commit raw/decompiled materials).
+# Raw payloads live OUTSIDE the repo in ../WordTulKit-investigation/.
+# These rules are belt-and-braces against accidental `git add` inside docs/.
+docs/research/kutools-investigation/raw/
+docs/research/kutools-investigation/binaries/
+*.decompiled/
